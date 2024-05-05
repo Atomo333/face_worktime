@@ -78,7 +78,7 @@ while True:
         work_time += time.time() - start_time
 
         # 15分ごとにアナウンスを流す
-        if int(work_time) != 0 and int(work_time) % 10 == 0 and not Flag:
+        if int(work_time) != 0 and int(work_time) % 900 == 0 and not Flag:
             announcement_thread = threading.Thread(target=play_announcement, args=(work_time,))
             announcement_thread.start()
             hours = int(work_time // 3600)
@@ -92,7 +92,7 @@ while True:
             )
             Flag = True
         
-        if int(work_time) % 10 != 0 and Flag:
+        if int(work_time) % 900 != 0 and Flag:
             Flag = False
 
         if int(work_time) > end_time:
