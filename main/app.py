@@ -5,6 +5,7 @@ import pygame
 import math
 import threading
 import argparse
+from plyer import notification
 
 # カメラを初期化
 cap = cv2.VideoCapture(0)
@@ -80,12 +81,28 @@ while True:
         if int(work_time) != 0 and int(work_time) % 900 == 0 and not Flag:
             announcement_thread = threading.Thread(target=play_announcement, args=(work_time,))
             announcement_thread.start()
+            hours = int(work_time // 3600)
+            minutes = int((work_time % 3600) // 60)
+            notification.notify(
+                title="作業時間通知",
+                message=f"作業時間が{hours}時間{minutes}分を超えました",
+                app_name="Work Time Tracker",
+                timeout=5,
+                app_icon="zunda_icon.ico"
+            )
             Flag = True
         
         if int(work_time) % 900 != 0 and Flag:
             Flag = False
 
         if int(work_time) > end_time:
+            notification.notify(
+                title="作業終了通知",
+                message="作業時間が終了しました",
+                app_name="Work Time Tracker",
+                timeout=5,
+                app_icon="zunda_icon.ico"
+            )
             sound_work_end.play()
             end_Flag = True
     
