@@ -70,7 +70,7 @@ while True:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # 顔検出を実行（画面の前にいればいいので閾値を甘めに設定）
-    faces = face_cascade.detectMultiScale(gray, 1.05, 2)
+    faces = face_cascade.detectMultiScale(gray, 1.1, 3)
 
     # 顔が検出された場合
     if len(faces) > 0:
