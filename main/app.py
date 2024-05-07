@@ -6,6 +6,9 @@ import math
 import threading
 import argparse
 from plyer import notification
+import csv
+import os.path
+from datetime import datetime, timedelta
 
 # カメラを初期化
 cap = cv2.VideoCapture(0)
@@ -132,6 +135,36 @@ end_hours = int(work_time // 3600)
 end_minutes = int((work_time % 3600) // 60)
 end_seconds = int(work_time % 60)
 print(f"作業時間： {end_hours} 時間 {end_minutes} 分 {end_seconds} 秒")
+
+# CSVファイルのパスを指定
+csv_file = "work_time_records.csv"
+
+# CSVファイルが存在しないときは新規作成し、項目名を書き込む
+file_exists = os.path.isfile(csv_file)
+if not file_exists:
+    with open(csv_file, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Date", "Start Time", "End Time", "Work Time"])
+
+# 作業時間と日時を記録する関数
+# 作業時間と日時を記録する関数
+def record_work_time(work_time):
+    end_time = datetime.now()
+    start_time = end_time - timedelta(seconds=work_time)
+
+    # 作業時間を時間、分、秒に分けて文字列に変換
+    hours, remainder = divmod(work_time, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    work_time_str = f"{int(hours):02d}:{int(minutes):02d}:{int(seconds):02d}"
+
+    with open(csv_file, "a", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([end_time.date(), start_time.strftime("%H:%M:%S"), end_time.strftime("%H:%M:%S"), work_time_str])
+
+# メインプログラムの終了時にrecord_work_time関数を呼び出す
+# (work_timeの値は適切な値に置き換えてください)
+record_work_time(work_time)
+
 # リソースを解放
 cap.release()
 cv2.destroyAllWindows()
